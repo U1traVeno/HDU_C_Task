@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "sale_handler.h"
-#include "../../dal.h"
+#include "../dal.h"
 
 void handleAddSaleRecord(SaleRecordList* saleList, const EmployeeList* empList, const ProductList* prodList) {
     SaleRecord record;

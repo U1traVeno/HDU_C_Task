@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "product_handler.h"
-#include "../../dal.h"
+#include "../dal.h"
 
 void handleAddProduct(ProductList* list) {
     Product prod;

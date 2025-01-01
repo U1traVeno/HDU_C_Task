@@ -1,7 +1,7 @@
 #ifndef PRODUCT_HANDLER_H
 #define PRODUCT_HANDLER_H
 
-#include "../../model.h"
+#include "../model.h"
 
 void handleAddProduct(ProductList* list);
 void handleDisplayAllProducts(const ProductList* list);

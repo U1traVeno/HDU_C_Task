@@ -17,14 +17,14 @@ set(SOURCES
     # handler模块
     src/handler/handler.c
     src/handler/handler.h
-    src/handler/employee/employee_handler.c
-    src/handler/employee/employee_handler.h
-    src/handler/product/product_handler.c
-    src/handler/product/product_handler.h
-    src/handler/sale/sale_handler.c
-    src/handler/sale/sale_handler.h
-    src/handler/report/report_handler.c
-    src/handler/report/report_handler.h
+    src/handler/employee_handler.c
+    src/handler/employee_handler.h
+    src/handler/product_handler.c
+    src/handler/product_handler.h
+    src/handler/sale_handler.c
+    src/handler/sale_handler.h
+    src/handler/report_handler.c
+    src/handler/report_handler.h
 )
 
 # 创建可执行文件

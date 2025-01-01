@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "report_handler.h"
-#include "../../dal.h"
+#include "../dal.h"
 
 void handleProductSalesReport(const SaleRecordList* saleList, const ProductList* prodList) {
     char month[8];

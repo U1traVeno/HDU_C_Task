@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include "handler.h"
 #include "../cli.h"
-#include "employee/employee_handler.h"
-#include "product/product_handler.h"
-#include "sale/sale_handler.h"
-#include "report/report_handler.h"
+#include "employee_handler.h"
+#include "product_handler.h"
+#include "sale_handler.h"
+#include "report_handler.h"
 
 void handleEmployeeManagement(EmployeeList* empList) {
     int choice;

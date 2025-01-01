@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "employee_handler.h"
-#include "../../dal.h"
+#include "../dal.h"
 
 void handleAddEmployee(EmployeeList* list) {
     Employee emp;

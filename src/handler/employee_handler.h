@@ -1,7 +1,7 @@
 #ifndef EMPLOYEE_HANDLER_H
 #define EMPLOYEE_HANDLER_H
 
-#include "../../model.h"
+#include "../model.h"
 
 void handleAddEmployee(EmployeeList* list);
 void handleDisplayAllEmployees(const EmployeeList* list);
