@@ -25,6 +25,8 @@ set(SOURCES
     src/handler/sale_handler.h
     src/handler/report_handler.c
     src/handler/report_handler.h
+    src/test_data.c
+    src/test_data.h
 )
 
 # 创建可执行文件

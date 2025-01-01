@@ -4,6 +4,7 @@
 #include "cli.h"
 #include "dal.h"
 #include "handler/handler.h"
+#include "test_data.h"
 
 int main() {
     // 创建数据结构
@@ -13,6 +14,16 @@ int main() {
     
     // 加载数据
     loadFromFiles(empList, prodList, saleList);
+    
+    // 如果数据为空，生成测试数据
+    if (empList->size == 0) {
+        printf("检测到数据为空，是否生成测试数据？(y/n)：");
+        char choice;
+        scanf(" %c", &choice);
+        if (choice == 'y' || choice == 'Y') {
+            generateTestData(empList, prodList, saleList);
+        }
+    }
     
     int choice;
     do {
