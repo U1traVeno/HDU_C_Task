@@ -314,12 +314,14 @@ ProductSalesSummary* getProductSalesByMonth(const SaleRecordList* saleList, cons
 
 EmployeeSalesSummary* getEmployeeSalesByMonth(const SaleRecordList* saleList, const EmployeeList* empList, 
                                              const ProductList* prodList, const char* month, int* count) {
-    // 分配足够大的空间存储所有员工的销售汇总
-    EmployeeSalesSummary* summary = malloc(sizeof(EmployeeSalesSummary) * empList->size);
     *count = 0;
     
-    // 初始化汇总数组
+    // 获取所有员工
     EmployeeNode* empCurrent = empList->head;
+    if (empCurrent == NULL) return NULL;
+    
+    // 为每个员工创建一个汇总记录
+    EmployeeSalesSummary* summary = malloc(sizeof(EmployeeSalesSummary) * empList->size);
     while (empCurrent != NULL) {
         strcpy(summary[*count].employeeId, empCurrent->data.id);
         strcpy(summary[*count].employeeName, empCurrent->data.name);
@@ -328,10 +330,12 @@ EmployeeSalesSummary* getEmployeeSalesByMonth(const SaleRecordList* saleList, co
         empCurrent = empCurrent->next;
     }
     
-    // 统计销售记录
+    // 遍历销售记录，统计每个员工的销售额
     SaleRecordNode* saleCurrent = saleList->head;
     while (saleCurrent != NULL) {
+        // 检查是否是目标月份的记录
         if (strncmp(saleCurrent->data.date, month, 7) == 0) {
+            // 查找对应的员工汇总记录
             for (int i = 0; i < *count; i++) {
                 if (strcmp(summary[i].employeeId, saleCurrent->data.employeeId) == 0) {
                     ProductNode* prod = findProduct(prodList, saleCurrent->data.productId);
@@ -343,17 +347,6 @@ EmployeeSalesSummary* getEmployeeSalesByMonth(const SaleRecordList* saleList, co
             }
         }
         saleCurrent = saleCurrent->next;
-    }
-    
-    // 按销售金额排序
-    for (int i = 0; i < *count - 1; i++) {
-        for (int j = 0; j < *count - i - 1; j++) {
-            if (summary[j].totalAmount < summary[j + 1].totalAmount) {
-                EmployeeSalesSummary temp = summary[j];
-                summary[j] = summary[j + 1];
-                summary[j + 1] = temp;
-            }
-        }
     }
     
     return summary;
@@ -402,17 +395,6 @@ EmployeeMonthlyReport* getEmployeeMonthlyReport(const SaleRecordList* saleList, 
             }
         }
         saleCurrent = saleCurrent->next;
-    }
-    
-    // 按月份排序
-    for (int i = 0; i < *count - 1; i++) {
-        for (int j = 0; j < *count - i - 1; j++) {
-            if (strcmp(report[j].month, report[j + 1].month) > 0) {
-                EmployeeMonthlyReport temp = report[j];
-                report[j] = report[j + 1];
-                report[j + 1] = temp;
-            }
-        }
     }
     
     return report;
