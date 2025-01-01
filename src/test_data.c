@@ -2,8 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <assert.h>
 #include "test_data.h"
 #include "dal.h"
+#include "utils.h"
 
 // 示例产品数据
 static const Product SAMPLE_PRODUCTS[] = {

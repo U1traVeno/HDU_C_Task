@@ -5,21 +5,6 @@
 #include "../dal.h"
 #include "../utils.h"
 
-// 日期验证函数
-static int isValidDate(const char* date) {
-    int year, month, day;
-    if (sscanf(date, "%d-%d-%d", &year, &month, &day) != 3) {
-        return 0;
-    }
-    
-    if (year < 2000 || year > 2100 ||    // 合理的年份范围
-        month < 1 || month > 12 ||        // 月份范围
-        day < 1 || day > 31) {           // 日期范围
-        return 0;
-    }
-    
-    return 1;
-}
 
 void handleAddSaleRecord(SaleRecordList* saleList, const EmployeeList* empList, const ProductList* prodList) {
     if (saleList == NULL || empList == NULL || prodList == NULL) {
