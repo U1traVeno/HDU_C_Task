@@ -38,5 +38,14 @@ EmployeeSalesSummary* getEmployeeSalesByMonth(const SaleRecordList* saleList, co
 EmployeeMonthlyReport* getEmployeeMonthlyReport(const SaleRecordList* saleList, const EmployeeList* empList, 
                                                const ProductList* prodList, const char* employeeId, int* count);
 
+// 模糊查找函数
+EmployeeList* findEmployeesByName(const EmployeeList* list, const char* name);
+ProductList* findProductsByName(const ProductList* list, const char* name);
+
+// 获取月度销售统计数据
+MonthlySalesSummary* getMonthlySales(const SaleRecordList* saleList, const EmployeeList* empList, 
+                                    const ProductList* prodList, const char* startMonth, 
+                                    const char* endMonth, int* count);
+
 #endif
 

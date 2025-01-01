@@ -15,22 +15,24 @@ void showEmployeeMenu(void) {
     printf("\n=== 员工管理 ===\n");
     printf("1. 添加员工\n");
     printf("2. 显示所有员工\n");
-    printf("3. 查找员工\n");
-    printf("4. 修改员工信息\n");
-    printf("5. 删除员工\n");
+    printf("3. 查找员工(按工号)\n");
+    printf("4. 查找员工(按姓名)\n");
+    printf("5. 修改员工信息\n");
+    printf("6. 删除员工\n");
     printf("0. 返回主菜单\n");
-    printf("请选择功能(0-5)：");
+    printf("请选择操作：");
 }
 
 void showProductMenu(void) {
     printf("\n=== 产品管理 ===\n");
     printf("1. 添加产品\n");
     printf("2. 显示所有产品\n");
-    printf("3. 查找产品\n");
-    printf("4. 修改产品信息\n");
-    printf("5. 删除产品\n");
+    printf("3. 查找产品(按编号)\n");
+    printf("4. 查找产品(按名称)\n");
+    printf("5. 修改产品信息\n");
+    printf("6. 删除产品\n");
     printf("0. 返回主菜单\n");
-    printf("请选择功能(0-5)：");
+    printf("请选择操作：");
 }
 
 void showSaleMenu(void) {

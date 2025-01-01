@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "product_handler.h"
 #include "../dal.h"
@@ -35,6 +36,11 @@ static void printProductRecord(void* record, void* context) {
     printf("价格：%.2f\n", prod->data.price);
 }
 
+// 获取下一个产品节点的函数
+static void* getNextProduct(void* node) {
+    return ((ProductNode*)node)->next;
+}
+
 void handleDisplayAllProducts(const ProductList* list) {
     if (list == NULL || list->head == NULL) {
         printf("暂无产品信息！\n");
@@ -46,6 +52,7 @@ void handleDisplayAllProducts(const ProductList* list) {
         list->size,           // 总记录数
         5,                    // 每页显示5条记录
         printProductRecord,   // 打印函数
+        getNextProduct,       // 获取下一个节点的函数
         NULL,                // 不需要上下文
         "所有产品信息"        // 标题
     );
@@ -105,4 +112,40 @@ void handleDeleteProduct(ProductList* list) {
     
     deleteProduct(list, id);
     printf("产品信息删除成功！\n");
+}
+
+void handleFindProductsByName(const ProductList* list) {
+    char name[50];
+    printf("\n=== 按名称查找产品 ===\n");
+    printf("请输入要查找的产品名称（支持模糊查找）：");
+    scanf("%s", name);
+    
+    ProductList* results = findProductsByName(list, name);
+    if (results == NULL || results->size == 0) {
+        printf("未找到匹配的产品！\n");
+        if (results != NULL) {
+            free(results);
+        }
+        return;
+    }
+    
+    printf("\n找到 %d 个匹配的产品：\n", results->size);
+    displayWithPagination(
+        results->head,         // 记录列表
+        results->size,         // 总记录数
+        5,                     // 每页显示5条记录
+        printProductRecord,    // 打印函数
+        getNextProduct,        // 获取下一个节点的函数
+        NULL,                  // 不需要上下文
+        "查找结果"             // 标题
+    );
+    
+    // 清理内存
+    ProductNode* current = results->head;
+    while (current != NULL) {
+        ProductNode* next = current->next;
+        free(current);
+        current = next;
+    }
+    free(results);
 } 

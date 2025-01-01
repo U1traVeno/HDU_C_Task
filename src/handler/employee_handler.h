@@ -8,5 +8,6 @@ void handleDisplayAllEmployees(const EmployeeList* list);
 void handleFindEmployee(const EmployeeList* list);
 void handleUpdateEmployee(EmployeeList* list);
 void handleDeleteEmployee(EmployeeList* list);
+void handleFindEmployeesByName(const EmployeeList* list);
 
 #endif 

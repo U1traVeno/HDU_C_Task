@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "employee_handler.h"
 #include "../dal.h"
@@ -35,6 +36,11 @@ static void printEmployeeRecord(void* record, void* context) {
     printf("出生年月：%s\n", emp->data.birthDate);
 }
 
+// 获取下一个员工节点的函数
+static void* getNextEmployee(void* node) {
+    return ((EmployeeNode*)node)->next;
+}
+
 void handleDisplayAllEmployees(const EmployeeList* list) {
     if (list == NULL || list->head == NULL) {
         printf("暂无员工信息！\n");
@@ -46,7 +52,8 @@ void handleDisplayAllEmployees(const EmployeeList* list) {
         list->size,           // 总记录数
         5,                    // 每页显示5条记录
         printEmployeeRecord,  // 打印函数
-        NULL,                // 不需要上下文
+        getNextEmployee,      // 获取下一个节点的函数
+        NULL,                 // 不需要上下文
         "所有员工信息"        // 标题
     );
 }
@@ -105,4 +112,40 @@ void handleDeleteEmployee(EmployeeList* list) {
     
     deleteEmployee(list, id);
     printf("员工信息删除成功！\n");
+}
+
+void handleFindEmployeesByName(const EmployeeList* list) {
+    char name[50];
+    printf("\n=== 按姓名查找员工 ===\n");
+    printf("请输入要查找的姓名（支持模糊查找）：");
+    scanf("%s", name);
+    
+    EmployeeList* results = findEmployeesByName(list, name);
+    if (results == NULL || results->size == 0) {
+        printf("未找到匹配的员工！\n");
+        if (results != NULL) {
+            free(results);
+        }
+        return;
+    }
+    
+    printf("\n找到 %d 个匹配的员工：\n", results->size);
+    displayWithPagination(
+        results->head,         // 记录列表
+        results->size,         // 总记录数
+        5,                     // 每页显示5条记录
+        printEmployeeRecord,   // 打印函数
+        getNextEmployee,       // 获取下一个节点的函数
+        NULL,                  // 不需要上下文
+        "查找结果"             // 标题
+    );
+    
+    // 清理内存
+    EmployeeNode* current = results->head;
+    while (current != NULL) {
+        EmployeeNode* next = current->next;
+        free(current);
+        current = next;
+    }
+    free(results);
 } 

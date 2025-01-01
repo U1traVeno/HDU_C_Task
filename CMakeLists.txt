@@ -13,7 +13,8 @@ set(SOURCES
     src/dal.c
     src/dal.h
     src/model.h
-    
+    src/utils.h
+    src/utils.c
     # handler模块
     src/handler/handler.c
     src/handler/handler.h

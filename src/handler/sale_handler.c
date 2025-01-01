@@ -82,6 +82,11 @@ static void printSaleRecord(void* record, void* context) {
     }
 }
 
+// 获取下一个销售记录节点的函数
+static void* getNextSaleRecord(void* node) {
+    return ((SaleRecordNode*)node)->next;
+}
+
 void handleDisplaySaleRecords(const SaleRecordList* saleList, const EmployeeList* empList, const ProductList* prodList) {
     if (saleList == NULL || saleList->head == NULL) {
         printf("暂无销售记录！\n");
@@ -94,12 +99,13 @@ void handleDisplaySaleRecords(const SaleRecordList* saleList, const EmployeeList
     } context = {empList, prodList};
 
     displayWithPagination(
-        saleList->head,           // 记录列表
-        saleList->size,           // 总记录数
-        5,                        // 每页显示5条记录
-        printSaleRecord,          // 打印函数
-        &context,                 // 上下文数据
-        "所有销售记录"            // 标题
+        saleList->head,       // 记录列表
+        saleList->size,       // 总记录数
+        5,                    // 每页显示5条记录
+        printSaleRecord,      // 打印函数
+        getNextSaleRecord,    // 获取下一个节点的函数
+        &context,             // 上下文数据
+        "所有销售记录"        // 标题
     );
 }
 

@@ -16,8 +16,9 @@ void handleEmployeeManagement(EmployeeList* empList) {
             case 1: handleAddEmployee(empList); break;
             case 2: handleDisplayAllEmployees(empList); break;
             case 3: handleFindEmployee(empList); break;
-            case 4: handleUpdateEmployee(empList); break;
-            case 5: handleDeleteEmployee(empList); break;
+            case 4: handleFindEmployeesByName(empList); break;
+            case 5: handleUpdateEmployee(empList); break;
+            case 6: handleDeleteEmployee(empList); break;
             case 0: break;
             default: printf("无效的选择！\n");
         }
@@ -34,8 +35,9 @@ void handleProductManagement(ProductList* prodList) {
             case 1: handleAddProduct(prodList); break;
             case 2: handleDisplayAllProducts(prodList); break;
             case 3: handleFindProduct(prodList); break;
-            case 4: handleUpdateProduct(prodList); break;
-            case 5: handleDeleteProduct(prodList); break;
+            case 4: handleFindProductsByName(prodList); break;
+            case 5: handleUpdateProduct(prodList); break;
+            case 6: handleDeleteProduct(prodList); break;
             case 0: break;
             default: printf("无效的选择！\n");
         }

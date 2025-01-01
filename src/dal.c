@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "dal.h"
 
 // 员工管理实现
@@ -408,4 +409,130 @@ EmployeeMonthlyReport* getEmployeeMonthlyReport(const SaleRecordList* saleList, 
     }
     
     return report;
+}
+
+// 模糊查找员工
+EmployeeList* findEmployeesByName(const EmployeeList* list, const char* name) {
+    if (list == NULL || name == NULL) return NULL;
+    
+    EmployeeList* result = createEmployeeList();
+    EmployeeNode* current = list->head;
+    
+    while (current != NULL) {
+        // 使用strstr进行子串匹配，不区分大小写
+        char nameLower[50] = {0};
+        char currentLower[50] = {0};
+        int i;
+        
+        // 转换为小写进行比较
+        for (i = 0; name[i]; i++) {
+            nameLower[i] = tolower(name[i]);
+        }
+        for (i = 0; current->data.name[i]; i++) {
+            currentLower[i] = tolower(current->data.name[i]);
+        }
+        
+        if (strstr(currentLower, nameLower) != NULL) {
+            addEmployee(result, current->data);
+        }
+        current = current->next;
+    }
+    
+    return result;
+}
+
+// 模糊查找产品
+ProductList* findProductsByName(const ProductList* list, const char* name) {
+    if (list == NULL || name == NULL) return NULL;
+    
+    ProductList* result = createProductList();
+    ProductNode* current = list->head;
+    
+    while (current != NULL) {
+        // 使用strstr进行子串匹配，不区分大小写
+        char nameLower[50] = {0};
+        char currentLower[50] = {0};
+        int i;
+        
+        // 转换为小写进行比较
+        for (i = 0; name[i]; i++) {
+            nameLower[i] = tolower(name[i]);
+        }
+        for (i = 0; current->data.name[i]; i++) {
+            currentLower[i] = tolower(current->data.name[i]);
+        }
+        
+        if (strstr(currentLower, nameLower) != NULL) {
+            addProduct(result, current->data);
+        }
+        current = current->next;
+    }
+    
+    return result;
+}
+
+MonthlySalesSummary* getMonthlySales(const SaleRecordList* saleList, const EmployeeList* empList, 
+                                    const ProductList* prodList, const char* startMonth, 
+                                    const char* endMonth, int* count) {
+    *count = 0;
+    if (saleList == NULL || startMonth == NULL || endMonth == NULL) {
+        return NULL;
+    }
+
+    // 最多统计60个月的数据
+    MonthlySalesSummary* summary = malloc(sizeof(MonthlySalesSummary) * 60);
+    if (summary == NULL) {
+        return NULL;
+    }
+
+    // 遍历销售记录
+    SaleRecordNode* current = saleList->head;
+    while (current != NULL) {
+        // 提取销售记录的年月
+        char recordMonth[8];
+        strncpy(recordMonth, current->data.date, 7);
+        recordMonth[7] = '\0';
+
+        // 检查是否在指定时间范围内
+        if (strcmp(recordMonth, startMonth) >= 0 && strcmp(recordMonth, endMonth) <= 0) {
+            // 查找是否已有该月份的记录
+            int monthIndex = -1;
+            for (int i = 0; i < *count; i++) {
+                if (strcmp(summary[i].month, recordMonth) == 0) {
+                    monthIndex = i;
+                    break;
+                }
+            }
+
+            // 如果是新月份，创建新记录
+            if (monthIndex == -1) {
+                monthIndex = *count;
+                strcpy(summary[*count].month, recordMonth);
+                summary[*count].totalAmount = 0;
+                summary[*count].totalTransactions = 0;
+                (*count)++;
+            }
+
+            // 更新统计数据
+            ProductNode* prod = findProduct(prodList, current->data.productId);
+            if (prod != NULL) {
+                summary[monthIndex].totalAmount += current->data.quantity * prod->data.price;
+                summary[monthIndex].totalTransactions++;
+            }
+        }
+        current = current->next;
+    }
+
+    // 按月份排序（冒泡排序）
+    for (int i = 0; i < *count - 1; i++) {
+        for (int j = 0; j < *count - i - 1; j++) {
+            if (strcmp(summary[j].month, summary[j + 1].month) > 0) {
+                MonthlySalesSummary temp = summary[j];
+                summary[j] = summary[j + 1];
+                summary[j + 1] = temp;
+            }
+        }
+    }
+
+    return summary;
 } 

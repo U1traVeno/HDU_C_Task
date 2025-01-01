@@ -43,6 +43,13 @@ typedef struct {
     float totalAmount;
 } EmployeeMonthlyReport;
 
+// 月度销售汇总结构
+typedef struct {
+    char month[8];           // 月份 (YYYY-MM)
+    float totalAmount;       // 销售总额
+    int totalTransactions;   // 销售笔数
+} MonthlySalesSummary;
+
 // 链表节点定义
 typedef struct EmployeeNode {
     Employee data;

@@ -2,11 +2,16 @@
 #include <stdlib.h>
 #include "utils.h"
 
+// 添加一个新的函数类型定义，用于获取下一个节点
+typedef void* (*GetNextFunc)(void* node);
+
+// 修改函数签名，添加获取下一个节点的函数
 void displayWithPagination(
     void* records,
     int totalRecords,
     int recordsPerPage,
     PrintRecordFunc print,
+    GetNextFunc getNext,
     void* context,
     const char* title
 ) {
@@ -17,22 +22,25 @@ void displayWithPagination(
 
     int currentPage = 1;
     int totalPages = (totalRecords + recordsPerPage - 1) / recordsPerPage;
+    void* current = records;
     
     while (1) {
-        system("clear");  // Linux/Unix 系统使用 clear，Windows 系统使用 cls
+        system("clear");
         printf("\n=== %s (第 %d/%d 页) ===\n", title, currentPage, totalPages);
         
-        // 计算当前页的起始和结束索引
-        int startIndex = (currentPage - 1) * recordsPerPage;
-        int endIndex = startIndex + recordsPerPage;
-        if (endIndex > totalRecords) {
-            endIndex = totalRecords;
+        // 跳转到当前页的起始记录
+        current = records;
+        for (int i = 0; i < (currentPage - 1) * recordsPerPage && current != NULL; i++) {
+            current = getNext(current);
         }
         
         // 打印当前页的记录
-        for (int i = startIndex; i < endIndex; i++) {
-            print(records, context);  // 调用回调函数打印记录
+        int recordsOnPage = 0;
+        while (current != NULL && recordsOnPage < recordsPerPage) {
+            print(current, context);
             printf("------------------------\n");
+            current = getNext(current);
+            recordsOnPage++;
         }
         
         // 显示导航选项
