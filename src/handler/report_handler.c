@@ -45,6 +45,12 @@ void handleProductSalesReport(const SaleRecordList* saleList, const ProductList*
     printf("请输入统计月份(YYYY-MM)：");
     scanf("%s", month);
     
+    // 添加年月验证
+    if (!isValidYearMonth(month)) {
+        printf("错误：月份格式不正确或无效！\n");
+        return;
+    }
+    
     int count;
     ProductSalesSummary* summary = getProductSalesByMonth(saleList, prodList, month, &count);
     
@@ -71,6 +77,12 @@ void handleEmployeeSalesReport(const SaleRecordList* saleList, const EmployeeLis
     printf("\n=== 员工销售统计报表 ===\n");
     printf("请输入统计月份(YYYY-MM)：");
     scanf("%s", month);
+    
+    // 添加年月验证
+    if (!isValidYearMonth(month)) {
+        printf("错误：月份格式不正确或无效！\n");
+        return;
+    }
     
     int count;
     EmployeeSalesSummary* summary = getEmployeeSalesByMonth(saleList, empList, prodList, month, &count);
@@ -131,8 +143,27 @@ void handleMonthlySalesReport(const SaleRecordList* saleList, const EmployeeList
     printf("\n=== 月度销售统计报表 ===\n");
     printf("请输入起始月份(YYYY-MM)：");
     scanf("%s", startMonth);
+    
+    // 添加起始月份验证
+    if (!isValidYearMonth(startMonth)) {
+        printf("错误：起始月份格式不正确或无效！\n");
+        return;
+    }
+    
     printf("请输入结束月份(YYYY-MM)：");
     scanf("%s", endMonth);
+    
+    // 添加结束月份验证
+    if (!isValidYearMonth(endMonth)) {
+        printf("错误：结束月份格式不正确或无效！\n");
+        return;
+    }
+    
+    // 添加起始月份不能大于结束月份的验证
+    if (strcmp(startMonth, endMonth) > 0) {
+        printf("错误：起始月份不能大于结束月份！\n");
+        return;
+    }
     
     int count;
     MonthlySalesSummary* summary = getMonthlySales(saleList, empList, prodList, startMonth, endMonth, &count);

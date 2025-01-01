@@ -54,7 +54,7 @@ void handleAddSaleRecord(SaleRecordList* saleList, const EmployeeList* empList, 
     printf("请输入销售日期(YYYY-MM-DD)：");
     scanf("%s", record.date);
     if (!isValidDate(record.date)) {
-        printf("无效的日期格式或日期范围！\n");
+        printf("错误：日期格式不正确或日期无效！\n");
         return;
     }
     

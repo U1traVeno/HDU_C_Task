@@ -18,4 +18,9 @@ void displayWithPagination(
     const char* title       // 显示标题
 );
 
+// 日期验证相关函数
+int isLeapYear(int year);
+int isValidDate(const char* dateStr);
+int isValidYearMonth(const char* yearMonthStr);
+
 #endif 

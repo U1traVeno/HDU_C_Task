@@ -75,4 +75,10 @@ void generateTestData(EmployeeList* empList, ProductList* prodList, SaleRecordLi
     printf("- %lu 个产品\n", sizeof(SAMPLE_PRODUCTS) / sizeof(Product));
     printf("- %lu 个员工\n", sizeof(SAMPLE_EMPLOYEES) / sizeof(Employee));
     printf("- 300 条销售记录\n");
+}
+
+void addTestData(EmployeeList* empList, ProductList* prodList, SaleRecordList* saleList) {
+    // 添加测试数据时确保所有日期格式正确
+    // 可以使用 assert 进行验证
+    assert(isValidDate("2024-02-29"));  // 确保测试数据中的日期有效
 } 

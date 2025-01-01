@@ -20,9 +20,15 @@ void handleAddEmployee(EmployeeList* list) {
     scanf("%s", emp.name);
     printf("请输入性别：");
     scanf("%s", emp.gender);
-    printf("请输入出生年月(YYYY-MM)：");
+    printf("请输入出生日期 (YYYY-MM-DD): ");
     scanf("%s", emp.birthDate);
     
+    // 添加出生日期验证
+    if (!isValidDate(emp.birthDate)) {
+        printf("错误：出生日期格式不正确或日期无效！\n");
+        return;
+    }
+
     addEmployee(list, emp);
     printf("员工信息添加成功！\n");
 }

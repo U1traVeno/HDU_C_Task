@@ -97,4 +97,72 @@ void displayWithPagination(
                 getchar();
         }
     }
+}
+
+// 判断是否为闰年
+int isLeapYear(int year) {
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+// 验证完整日期格式 (YYYY-MM-DD)
+int isValidDate(const char* dateStr) {
+    if (strlen(dateStr) != 10 || dateStr[4] != '-' || dateStr[7] != '-') {
+        return 0;
+    }
+
+    // 提取年月日
+    int year, month, day;
+    if (sscanf(dateStr, "%d-%d-%d", &year, &month, &day) != 3) {
+        return 0;
+    }
+
+    // 验证年份范围 (假设合理范围为1900-2100)
+    if (year < 1900 || year > 2100) {
+        return 0;
+    }
+
+    // 验证月份
+    if (month < 1 || month > 12) {
+        return 0;
+    }
+
+    // 每月天数表
+    int daysInMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    
+    // 闰年二月特殊处理
+    if (isLeapYear(year)) {
+        daysInMonth[1] = 29;
+    }
+
+    // 验证日期
+    if (day < 1 || day > daysInMonth[month - 1]) {
+        return 0;
+    }
+
+    return 1;
+}
+
+// 验证年月格式 (YYYY-MM)
+int isValidYearMonth(const char* yearMonthStr) {
+    if (strlen(yearMonthStr) != 7 || yearMonthStr[4] != '-') {
+        return 0;
+    }
+
+    // 提取年月
+    int year, month;
+    if (sscanf(yearMonthStr, "%d-%d", &year, &month) != 2) {
+        return 0;
+    }
+
+    // 验证年份范围 (假设合理范围为1900-2100)
+    if (year < 1900 || year > 2100) {
+        return 0;
+    }
+
+    // 验证月份
+    if (month < 1 || month > 12) {
+        return 0;
+    }
+
+    return 1;
 } 
