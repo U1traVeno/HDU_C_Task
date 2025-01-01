@@ -129,12 +129,22 @@ SaleRecordList* createSaleRecordList(void) {
     return list;
 }
 
-void addSaleRecord(SaleRecordList* list, SaleRecord record) {
+void addSaleRecord(SaleRecordList* saleList, SaleRecord record) {
+    if (saleList == NULL) {
+        printf("错误：销售记录列表未初始化！\n");
+        return;
+    }
+    
     SaleRecordNode* newNode = (SaleRecordNode*)malloc(sizeof(SaleRecordNode));
+    if (newNode == NULL) {
+        printf("错误：内存分配失败！\n");
+        return;
+    }
+    
     newNode->data = record;
-    newNode->next = list->head;
-    list->head = newNode;
-    list->size++;
+    newNode->next = saleList->head;
+    saleList->head = newNode;
+    saleList->size++;
 }
 
 void deleteSaleRecord(SaleRecordList* list, const char* employeeId, const char* date) {

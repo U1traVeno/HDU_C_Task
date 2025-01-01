@@ -3,7 +3,28 @@
 #include "sale_handler.h"
 #include "../dal.h"
 
+// 日期验证函数
+static int isValidDate(const char* date) {
+    int year, month, day;
+    if (sscanf(date, "%d-%d-%d", &year, &month, &day) != 3) {
+        return 0;
+    }
+    
+    if (year < 2000 || year > 2100 ||    // 合理的年份范围
+        month < 1 || month > 12 ||        // 月份范围
+        day < 1 || day > 31) {           // 日期范围
+        return 0;
+    }
+    
+    return 1;
+}
+
 void handleAddSaleRecord(SaleRecordList* saleList, const EmployeeList* empList, const ProductList* prodList) {
+    if (saleList == NULL || empList == NULL || prodList == NULL) {
+        printf("错误：数据列表未初始化！\n");
+        return;
+    }
+
     SaleRecord record;
     printf("\n=== 添加销售记录 ===\n");
     
@@ -23,8 +44,17 @@ void handleAddSaleRecord(SaleRecordList* saleList, const EmployeeList* empList, 
     
     printf("请输入销售数量：");
     scanf("%d", &record.quantity);
+    if (record.quantity <= 0) {
+        printf("销售数量必须大于0！\n");
+        return;
+    }
+    
     printf("请输入销售日期(YYYY-MM-DD)：");
     scanf("%s", record.date);
+    if (!isValidDate(record.date)) {
+        printf("无效的日期格式或日期范围！\n");
+        return;
+    }
     
     addSaleRecord(saleList, record);
     printf("销售记录添加成功！\n");
@@ -80,6 +110,11 @@ void handleFindSaleRecord(const SaleRecordList* saleList, const EmployeeList* em
 }
 
 void handleUpdateSaleRecord(SaleRecordList* saleList, const EmployeeList* empList, const ProductList* prodList) {
+    if (saleList == NULL || empList == NULL || prodList == NULL) {
+        printf("错误：数据列表未初始化！\n");
+        return;
+    }
+
     SaleRecord oldRecord, newRecord;
     printf("\n=== 修改销售记录 ===\n");
     
@@ -88,6 +123,10 @@ void handleUpdateSaleRecord(SaleRecordList* saleList, const EmployeeList* empLis
     scanf("%s", oldRecord.employeeId);
     printf("日期(YYYY-MM-DD)：");
     scanf("%s", oldRecord.date);
+    if (!isValidDate(oldRecord.date)) {
+        printf("无效的日期格式或日期范围！\n");
+        return;
+    }
     printf("产品号：");
     scanf("%s", oldRecord.productId);
     
@@ -108,8 +147,17 @@ void handleUpdateSaleRecord(SaleRecordList* saleList, const EmployeeList* empLis
     
     printf("数量：");
     scanf("%d", &newRecord.quantity);
+    if (newRecord.quantity <= 0) {
+        printf("销售数量必须大于0！\n");
+        return;
+    }
+    
     printf("日期(YYYY-MM-DD)：");
     scanf("%s", newRecord.date);
+    if (!isValidDate(newRecord.date)) {
+        printf("无效的日期格式或日期范围！\n");
+        return;
+    }
     
     updateSaleRecord(saleList, oldRecord, newRecord);
     printf("销售记录修改成功！\n");
