@@ -419,22 +419,17 @@ EmployeeList* findEmployeesByName(const EmployeeList* list, const char* name) {
     EmployeeNode* current = list->head;
     
     while (current != NULL) {
-        // 使用strstr进行子串匹配，不区分大小写
-        char nameLower[50] = {0};
-        char currentLower[50] = {0};
-        int i;
-        
-        // 转换为小写进行比较
-        for (i = 0; name[i]; i++) {
-            nameLower[i] = tolower(name[i]);
-        }
-        for (i = 0; current->data.name[i]; i++) {
-            currentLower[i] = tolower(current->data.name[i]);
-        }
-        
-        if (strstr(currentLower, nameLower) != NULL) {
+#ifdef _WIN32
+        // Windows下使用编码转换比较
+        if (compareStringWithEncoding(current->data.name, name)) {
             addEmployee(result, current->data);
         }
+#else
+        // Linux下直接比较
+        if (strstr(current->data.name, name) != NULL) {
+            addEmployee(result, current->data);
+        }
+#endif
         current = current->next;
     }
     
@@ -449,22 +444,17 @@ ProductList* findProductsByName(const ProductList* list, const char* name) {
     ProductNode* current = list->head;
     
     while (current != NULL) {
-        // 使用strstr进行子串匹配，不区分大小写
-        char nameLower[50] = {0};
-        char currentLower[50] = {0};
-        int i;
-        
-        // 转换为小写进行比较
-        for (i = 0; name[i]; i++) {
-            nameLower[i] = tolower(name[i]);
-        }
-        for (i = 0; current->data.name[i]; i++) {
-            currentLower[i] = tolower(current->data.name[i]);
-        }
-        
-        if (strstr(currentLower, nameLower) != NULL) {
+#ifdef _WIN32
+        // Windows下使用编码转换比较
+        if (compareStringWithEncoding(current->data.name, name)) {
             addProduct(result, current->data);
         }
+#else
+        // Linux下直接比较
+        if (strstr(current->data.name, name) != NULL) {
+            addProduct(result, current->data);
+        }
+#endif
         current = current->next;
     }
     

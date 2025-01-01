@@ -166,4 +166,44 @@ int isValidYearMonth(const char* yearMonthStr) {
     }
 
     return 1;
-} 
+}
+
+#ifdef _WIN32
+char* convertUtf8ToCurrentEncoding(const char* utf8Str) {
+    if (utf8Str == NULL) return NULL;
+
+    // 获取当前代码页
+    UINT cp = GetConsoleCP();
+    
+    // UTF-8 转换为宽字符
+    int len = MultiByteToWideChar(CP_UTF8, 0, utf8Str, -1, NULL, 0);
+    wchar_t* wstr = (wchar_t*)malloc(len * sizeof(wchar_t));
+    MultiByteToWideChar(CP_UTF8, 0, utf8Str, -1, wstr, len);
+    
+    // 宽字符转换为当前代码页
+    len = WideCharToMultiByte(cp, 0, wstr, -1, NULL, 0, NULL, NULL);
+    char* result = (char*)malloc(len);
+    WideCharToMultiByte(cp, 0, wstr, -1, result, len, NULL, NULL);
+    
+    free(wstr);
+    return result;
+}
+
+int compareStringWithEncoding(const char* str1, const char* str2) {
+    char* converted1 = convertUtf8ToCurrentEncoding(str1);
+    char* converted2 = convertUtf8ToCurrentEncoding(str2);
+    
+    int result = (strstr(converted1, converted2) != NULL);
+    
+    free(converted1);
+    free(converted2);
+    
+    return result;
+}
+
+void freeConvertedString(char* str) {
+    if (str != NULL) {
+        free(str);
+    }
+}
+#endif 

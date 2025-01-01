@@ -1,6 +1,10 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 // 回调函数类型定义，用于打印单个记录
 typedef void (*PrintRecordFunc)(void* record, void* context);
 
@@ -22,5 +26,15 @@ void displayWithPagination(
 int isLeapYear(int year);
 int isValidDate(const char* dateStr);
 int isValidYearMonth(const char* yearMonthStr);
+
+// 字符串编码转换函数声明
+#ifdef _WIN32
+// 将UTF-8字符串转换为当前系统编码
+char* convertUtf8ToCurrentEncoding(const char* utf8Str);
+// 比较两个可能不同编码的字符串（用于搜索）
+int compareStringWithEncoding(const char* str1, const char* str2);
+// 释放转换后的字符串
+void freeConvertedString(char* str);
+#endif
 
 #endif 
