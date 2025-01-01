@@ -1,12 +1,39 @@
 #include <stdio.h>
 #include <stdlib.h>
+#ifdef _WIN32
+#include <windows.h>
+#endif
 #include "model.h"
 #include "cli.h"
 #include "dal.h"
 #include "handler/handler.h"
 #include "test_data.h"
 
+// 设置控制台编码的函数
+void setConsoleEncoding() {
+#ifdef _WIN32
+    // 设置控制台输出代码页为 UTF-8
+    SetConsoleOutputCP(65001);
+    // 设置控制台输入代码页为 UTF-8
+    SetConsoleCP(65001);
+    
+    // 获取标准输出句柄
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (hOut != INVALID_HANDLE_VALUE) {
+        DWORD dwMode = 0;
+        if (GetConsoleMode(hOut, &dwMode)) {
+            // 启用虚拟终端序列处理
+            dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+            SetConsoleMode(hOut, dwMode);
+        }
+    }
+#endif
+}
+
 int main() {
+    // 设置控制台编码
+    setConsoleEncoding();
+    
     // 创建数据结构
     EmployeeList* empList = createEmployeeList();
     ProductList* prodList = createProductList();
