@@ -2,6 +2,7 @@
 #include <string.h>
 #include "employee_handler.h"
 #include "../dal.h"
+#include "../utils.h"
 
 void handleAddEmployee(EmployeeList* list) {
     Employee emp;
@@ -25,22 +26,29 @@ void handleAddEmployee(EmployeeList* list) {
     printf("员工信息添加成功！\n");
 }
 
+// 定义打印单个员工记录的回调函数
+static void printEmployeeRecord(void* record, void* context) {
+    EmployeeNode* emp = (EmployeeNode*)record;
+    printf("员工号：%s\n", emp->data.id);
+    printf("姓名：%s\n", emp->data.name);
+    printf("性别：%s\n", emp->data.gender);
+    printf("出生年月：%s\n", emp->data.birthDate);
+}
+
 void handleDisplayAllEmployees(const EmployeeList* list) {
-    printf("\n=== 所有员工信息 ===\n");
-    EmployeeNode* current = getAllEmployees(list);
-    if (current == NULL) {
+    if (list == NULL || list->head == NULL) {
         printf("暂无员工信息！\n");
         return;
     }
-    
-    while (current != NULL) {
-        printf("员工号：%s\n", current->data.id);
-        printf("姓名：%s\n", current->data.name);
-        printf("性别：%s\n", current->data.gender);
-        printf("出生年月：%s\n", current->data.birthDate);
-        printf("------------------------\n");
-        current = current->next;
-    }
+
+    displayWithPagination(
+        list->head,           // 记录列表
+        list->size,           // 总记录数
+        5,                    // 每页显示5条记录
+        printEmployeeRecord,  // 打印函数
+        NULL,                // 不需要上下文
+        "所有员工信息"        // 标题
+    );
 }
 
 void handleFindEmployee(const EmployeeList* list) {

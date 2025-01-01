@@ -2,6 +2,7 @@
 #include <string.h>
 #include "product_handler.h"
 #include "../dal.h"
+#include "../utils.h"
 
 void handleAddProduct(ProductList* list) {
     Product prod;
@@ -25,22 +26,29 @@ void handleAddProduct(ProductList* list) {
     printf("产品信息添加成功！\n");
 }
 
+// 定义打印单个产品记录的回调函数
+static void printProductRecord(void* record, void* context) {
+    ProductNode* prod = (ProductNode*)record;
+    printf("产品号：%s\n", prod->data.id);
+    printf("名称：%s\n", prod->data.name);
+    printf("类型：%s\n", prod->data.type);
+    printf("价格：%.2f\n", prod->data.price);
+}
+
 void handleDisplayAllProducts(const ProductList* list) {
-    printf("\n=== 所有产品信息 ===\n");
-    ProductNode* current = getAllProducts(list);
-    if (current == NULL) {
+    if (list == NULL || list->head == NULL) {
         printf("暂无产品信息！\n");
         return;
     }
-    
-    while (current != NULL) {
-        printf("产品号：%s\n", current->data.id);
-        printf("名称：%s\n", current->data.name);
-        printf("类型：%s\n", current->data.type);
-        printf("价格：%.2f\n", current->data.price);
-        printf("------------------------\n");
-        current = current->next;
-    }
+
+    displayWithPagination(
+        list->head,           // 记录列表
+        list->size,           // 总记录数
+        5,                    // 每页显示5条记录
+        printProductRecord,   // 打印函数
+        NULL,                // 不需要上下文
+        "所有产品信息"        // 标题
+    );
 }
 
 void handleFindProduct(const ProductList* list) {

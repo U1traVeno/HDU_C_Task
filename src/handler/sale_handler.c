@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "sale_handler.h"
 #include "../dal.h"
+#include "../utils.h"
 
 // 日期验证函数
 static int isValidDate(const char* date) {
@@ -61,105 +62,45 @@ void handleAddSaleRecord(SaleRecordList* saleList, const EmployeeList* empList, 
     printf("销售记录添加成功！\n");
 }
 
+// 定义打印单个销售记录的回调函数
+static void printSaleRecord(void* record, void* context) {
+    SaleRecordNode* saleRecord = (SaleRecordNode*)record;
+    struct {
+        const EmployeeList* empList;
+        const ProductList* prodList;
+    }* ctx = context;
+    
+    EmployeeNode* emp = findEmployee(ctx->empList, saleRecord->data.employeeId);
+    ProductNode* prod = findProduct(ctx->prodList, saleRecord->data.productId);
+    
+    printf("日期：%s\n", saleRecord->data.date);
+    printf("员工：%s (%s)\n", emp ? emp->data.name : "未知", saleRecord->data.employeeId);
+    printf("产品：%s (%s)\n", prod ? prod->data.name : "未知", saleRecord->data.productId);
+    printf("数量：%d\n", saleRecord->data.quantity);
+    if (prod) {
+        printf("金额：%.2f\n", saleRecord->data.quantity * prod->data.price);
+    }
+}
+
 void handleDisplaySaleRecords(const SaleRecordList* saleList, const EmployeeList* empList, const ProductList* prodList) {
-    printf("\n=== 所有销售记录 ===\n");
-    SaleRecordNode* current = getAllSaleRecords(saleList);
-    if (current == NULL) {
+    if (saleList == NULL || saleList->head == NULL) {
         printf("暂无销售记录！\n");
         return;
     }
-    
-    const int RECORDS_PER_PAGE = 5;  // 每页显示5条记录
-    int currentPage = 1;
-    int totalRecords = saleList->size;
-    int totalPages = (totalRecords + RECORDS_PER_PAGE - 1) / RECORDS_PER_PAGE;
-    
-    while (1) {
-        system("clear");  // Linux/Unix 系统使用 clear，Windows 系统使用 cls
-        printf("\n=== 所有销售记录 (第 %d/%d 页) ===\n", currentPage, totalPages);
-        
-        // 跳过之前页面的记录
-        SaleRecordNode* pageStart = current;
-        for (int i = 1; i < currentPage; i++) {
-            for (int j = 0; j < RECORDS_PER_PAGE && pageStart != NULL; j++) {
-                pageStart = pageStart->next;
-            }
-        }
-        
-        // 显示当前页的记录
-        int recordsOnPage = 0;
-        SaleRecordNode* temp = pageStart;
-        while (temp != NULL && recordsOnPage < RECORDS_PER_PAGE) {
-            EmployeeNode* emp = findEmployee(empList, temp->data.employeeId);
-            ProductNode* prod = findProduct(prodList, temp->data.productId);
-            
-            printf("日期：%s\n", temp->data.date);
-            printf("员工：%s (%s)\n", emp ? emp->data.name : "未知", temp->data.employeeId);
-            printf("产品：%s (%s)\n", prod ? prod->data.name : "未知", temp->data.productId);
-            printf("数量：%d\n", temp->data.quantity);
-            if (prod) {
-                printf("金额：%.2f\n", temp->data.quantity * prod->data.price);
-            }
-            printf("------------------------\n");
-            
-            temp = temp->next;
-            recordsOnPage++;
-        }
-        
-        // 显示导航选项
-        printf("\n操作说明：\n");
-        printf("n - 下一页\n");
-        printf("p - 上一页\n");
-        printf("g - 跳转到指定页\n");
-        printf("q - 退出\n");
-        printf("请选择操作：");
-        
-        char choice;
-        scanf(" %c", &choice);
-        
-        switch(choice) {
-            case 'n':
-            case 'N':
-                if (currentPage < totalPages) {
-                    currentPage++;
-                } else {
-                    printf("已经是最后一页了！\n");
-                    getchar();  // 等待用户按回车
-                }
-                break;
-                
-            case 'p':
-            case 'P':
-                if (currentPage > 1) {
-                    currentPage--;
-                } else {
-                    printf("已经是第一页了！\n");
-                    getchar();  // 等待用户按回车
-                }
-                break;
-                
-            case 'g':
-            case 'G':
-                printf("请输入要跳转的页码(1-%d)：", totalPages);
-                int page;
-                scanf("%d", &page);
-                if (page >= 1 && page <= totalPages) {
-                    currentPage = page;
-                } else {
-                    printf("无效的页码！\n");
-                    getchar();  // 等待用户按回车
-                }
-                break;
-                
-            case 'q':
-            case 'Q':
-                return;
-                
-            default:
-                printf("无效的选择！\n");
-                getchar();  // 等待用户按回车
-        }
-    }
+
+    struct {
+        const EmployeeList* empList;
+        const ProductList* prodList;
+    } context = {empList, prodList};
+
+    displayWithPagination(
+        saleList->head,           // 记录列表
+        saleList->size,           // 总记录数
+        5,                        // 每页显示5条记录
+        printSaleRecord,          // 打印函数
+        &context,                 // 上下文数据
+        "所有销售记录"            // 标题
+    );
 }
 
 void handleFindSaleRecord(const SaleRecordList* saleList, const EmployeeList* empList, const ProductList* prodList) {
