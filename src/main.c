@@ -9,12 +9,10 @@
 #include "handler/handler.h"
 #include "test_data.h"
 
-// 设置控制台编码的函数
+// 给亲爱的瘟斗士设置编码环境
 void setConsoleEncoding() {
 #ifdef _WIN32
-    // 设置控制台输出代码页为 UTF-8
     SetConsoleOutputCP(65001);
-    // 设置控制台输入代码页为 UTF-8
     SetConsoleCP(65001);
     
     // 获取标准输出句柄
