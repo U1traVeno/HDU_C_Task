@@ -8,25 +8,7 @@
 #include "dal.h"
 #include "handler/handler.h"
 #include "test_data.h"
-
-// 给亲爱的瘟斗士设置编码环境
-void setConsoleEncoding() {
-#ifdef _WIN32
-    SetConsoleOutputCP(65001);
-    SetConsoleCP(65001);
-    
-    // 获取标准输出句柄
-    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-    if (hOut != INVALID_HANDLE_VALUE) {
-        DWORD dwMode = 0;
-        if (GetConsoleMode(hOut, &dwMode)) {
-            // 启用虚拟终端序列处理
-            dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-            SetConsoleMode(hOut, dwMode);
-        }
-    }
-#endif
-}
+#include "utils.h"
 
 int main() {
     // 设置控制台编码

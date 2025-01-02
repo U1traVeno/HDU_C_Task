@@ -35,6 +35,8 @@ char* convertUtf8ToCurrentEncoding(const char* utf8Str);
 int compareStringWithEncoding(const char* str1, const char* str2);
 // 释放转换后的字符串
 void freeConvertedString(char* str);
+
+void setConsoleEncoding();
 #endif
 
 #endif 

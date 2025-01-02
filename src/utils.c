@@ -206,4 +206,9 @@ void freeConvertedString(char* str) {
         free(str);
     }
 }
+
+void setConsoleEncoding() {
+    SetConsoleOutputCP(65001);
+    SetConsoleCP(65001);
+}
 #endif 
