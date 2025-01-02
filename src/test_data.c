@@ -7,80 +7,80 @@
 #include "dal.h"
 #include "utils.h"
 
-// 示例产品数据
+// Sample product data
 static const Product SAMPLE_PRODUCTS[] = {
-    {"P001", "iPhone 15", "手机", 6999.0},
-    {"P002", "MacBook Pro", "笔记本", 12999.0},
-    {"P003", "AirPods Pro", "耳机", 1999.0},
-    {"P004", "iPad Air", "平板", 4799.0},
-    {"P005", "Apple Watch", "智能手表", 3299.0}
+    {"P001", "iPhone 15", "Phone", 999.99},
+    {"P002", "MacBook Pro", "Laptop", 1999.99},
+    {"P003", "AirPods Pro", "Earphones", 249.99},
+    {"P004", "iPad Air", "Tablet", 599.99},
+    {"P005", "Apple Watch", "Smartwatch", 399.99}
 };
 
-// 示例员工数据
+// Sample employee data
 static const Employee SAMPLE_EMPLOYEES[] = {
-    {"E001", "张三", "男", "1990-05"},
-    {"E002", "李四", "女", "1988-11"},
-    {"E003", "王五", "男", "1995-03"},
-    {"E004", "赵六", "女", "1992-08"},
-    {"E005", "孙七", "男", "1993-12"}
+    {"E001", "John Foo", "M", "1990-05"},
+    {"E002", "Sarah Bar", "F", "1988-11"},
+    {"E003", "Michael Brown", "M", "1995-03"},
+    {"E004", "Emily Davis", "F", "1992-08"},
+    {"E005", "David Wilson", "M", "1993-12"}
 };
 
-// 生成随机日期 (2023-01-01 到 2024-03-31)
+// Generate random date (2023-01-01 to 2024-03-31)
 static void generateRandomDate(char* date) {
     int year = 2023 + (rand() % 2);
     int month = 1 + (rand() % 12);
-    int day = 1 + (rand() % 28);  // 简化处理，统一用28天
+    int day = 1 + (rand() % 28);  // Simplified, using 28 days
     
     if (year == 2024 && month > 3) {
-        month = 3;  // 限制在2024年3月之前
+        month = 3;  // Restrict to March 2024
     }
     
     sprintf(date, "%04d-%02d-%02d", year, month, day);
 }
 
 void generateTestData(EmployeeList* empList, ProductList* prodList, SaleRecordList* saleList) {
-    srand(time(NULL));  // 初始化随机数生成器
+    srand(time(NULL));  // Initialize random number generator
     
-    // 添加示例产品
+    // Add sample products
     for (int i = 0; i < sizeof(SAMPLE_PRODUCTS) / sizeof(Product); i++) {
         addProduct(prodList, SAMPLE_PRODUCTS[i]);
     }
     
-    // 添加示例员工
+    // Add sample employees
     for (int i = 0; i < sizeof(SAMPLE_EMPLOYEES) / sizeof(Employee); i++) {
         addEmployee(empList, SAMPLE_EMPLOYEES[i]);
     }
     
-    // 生成300条销售记录
+    // Generate 300 sales records
     for (int i = 0; i < 300; i++) {
         SaleRecord record;
         
-        // 随机选择员工
+        // Randomly select employee
         int empIndex = rand() % (sizeof(SAMPLE_EMPLOYEES) / sizeof(Employee));
         strcpy(record.employeeId, SAMPLE_EMPLOYEES[empIndex].id);
         
-        // 随机选择产品
+        // Randomly select product
         int prodIndex = rand() % (sizeof(SAMPLE_PRODUCTS) / sizeof(Product));
         strcpy(record.productId, SAMPLE_PRODUCTS[prodIndex].id);
         
-        // 生成随机数量 (1-10)
+        // Generate random quantity (1-10)
         record.quantity = 1 + (rand() % 10);
         
-        // 生成随机日期
+        // Generate random date
         generateRandomDate(record.date);
         
-        // 添加销售记录
+        // Add sales record
         addSaleRecord(saleList, record);
     }
     
-    printf("已生成测试数据：\n");
-    printf("- %lu 个产品\n", sizeof(SAMPLE_PRODUCTS) / sizeof(Product));
-    printf("- %lu 个员工\n", sizeof(SAMPLE_EMPLOYEES) / sizeof(Employee));
-    printf("- 300 条销售记录\n");
+    printf("Test data generated:\n");
+    printf("- %lu products\n", sizeof(SAMPLE_PRODUCTS) / sizeof(Product));
+    printf("- %lu employees\n", sizeof(SAMPLE_EMPLOYEES) / sizeof(Employee));
+    printf("- 300 sales records\n");
 }
 
 void addTestData(EmployeeList* empList, ProductList* prodList, SaleRecordList* saleList) {
-    // 添加测试数据时确保所有日期格式正确
-    // 可以使用 assert 进行验证
-    assert(isValidDate("2024-02-29"));  // 确保测试数据中的日期有效
+    // Ensure all dates are valid when adding test data
+    // Use assert for validation
+    assert(isValidDate("2024-02-29"));  // Ensure test data dates are valid
 } 
