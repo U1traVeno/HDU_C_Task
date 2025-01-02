@@ -39,6 +39,32 @@ static void printEmployeeMonthlyReport(void* record, void* context) {
     printf("销售总额：%.2f\n", report->totalAmount);
 }
 
+// 用于数组形式的getNext方法
+static void* getNextArrayRecord(void* current) {
+    if (current == NULL) return NULL;
+    
+    // 将void*转换为char*以进行指针运算
+    return (char*)current + sizeof(ProductSalesSummary);
+}
+
+// 用于员工销售统计的getNext方法
+static void* getNextEmployeeSalesRecord(void* current) {
+    if (current == NULL) return NULL;
+    return (char*)current + sizeof(EmployeeSalesSummary);
+}
+
+// 用于员工月度报表的getNext方法
+static void* getNextEmployeeMonthlyRecord(void* current) {
+    if (current == NULL) return NULL;
+    return (char*)current + sizeof(EmployeeMonthlyReport);
+}
+
+// 用于月度销售统计的getNext方法
+static void* getNextMonthlySalesRecord(void* current) {
+    if (current == NULL) return NULL;
+    return (char*)current + sizeof(MonthlySalesSummary);
+}
+
 void handleProductSalesReport(const SaleRecordList* saleList, const ProductList* prodList) {
     char month[8];
     printf("\n=== 产品销售统计报表 ===\n");
@@ -64,7 +90,7 @@ void handleProductSalesReport(const SaleRecordList* saleList, const ProductList*
         count,                      // 总记录数
         5,                         // 每页显示5条记录
         printProductSalesSummary,  // 打印函数
-        NULL,                      // 数组形式不需要getNext函数
+        getNextArrayRecord,        // 数组形式的getNext函数
         NULL,                      // 不需要上下文
         "产品销售统计报表"          // 标题
     );
@@ -97,7 +123,7 @@ void handleEmployeeSalesReport(const SaleRecordList* saleList, const EmployeeLis
         count,                        // 总记录数
         5,                           // 每页显示5条记录
         printEmployeeSalesSummary,   // 打印函数
-        NULL,                        // 数组形式不需要getNext函数
+        getNextEmployeeSalesRecord,  // 数组形式的getNext函数
         NULL,                        // 不需要上下文
         "员工销售统计报表"            // 标题
     );
@@ -126,13 +152,13 @@ void handleEmployeeMonthlyReport(const SaleRecordList* saleList, const EmployeeL
     }
 
     displayWithPagination(
-        report,                     // 记录列表
-        count,                      // 总记录数
-        5,                         // 每页显示5条记录
-        printEmployeeMonthlyReport, // 打印函数
-        NULL,                      // 数组形式不需要getNext函数
-        NULL,                      // 不需要上下文
-        "员工月度销售报表"          // 标题
+        report,                        // 记录列表
+        count,                        // 总记录数
+        5,                           // 每页显示5条记录
+        printEmployeeMonthlyReport,  // 打印函数
+        getNextEmployeeMonthlyRecord, // 数组形式的getNext函数
+        NULL,                        // 不需要上下文
+        "员工月度销售报表"           // 标题
     );
     
     free(report);
@@ -174,11 +200,11 @@ void handleMonthlySalesReport(const SaleRecordList* saleList, const EmployeeList
     }
 
     displayWithPagination(
-        summary,                    // 记录列表
+        summary,                     // 记录列表
         count,                      // 总记录数
         5,                         // 每页显示5条记录
         printMonthlySalesSummary,  // 打印函数
-        NULL,                      // 数组形式不需要getNext函数
+        getNextMonthlySalesRecord, // 数组形式的getNext函数
         NULL,                      // 不需要上下文
         "月度销售统计报表"          // 标题
     );
