@@ -370,13 +370,26 @@ EmployeeSalesSummary* getEmployeeSalesByMonth(const SaleRecordList* saleList, co
 
 EmployeeMonthlyReport* getEmployeeMonthlyReport(const SaleRecordList* saleList, const EmployeeList* empList, 
                                                const ProductList* prodList, const char* employeeId, int* count) {
+    // 参数检查
+    if (!saleList || !empList || !prodList || !employeeId || !count) {
+        printf("Invalid parameters in getEmployeeMonthlyReport\n");
+        return NULL;
+    }
     // 最多12个月的报表
     EmployeeMonthlyReport* report = malloc(sizeof(EmployeeMonthlyReport) * 12);
+    if (!report) {
+        printf("Memory allocation failed in getEmployeeMonthlyReport\n");
+        return NULL;
+    }
     *count = 0;
     
     // 获取员工信息
     EmployeeNode* emp = findEmployee(empList, employeeId);
-    if (emp == NULL) return NULL;
+    if (emp == NULL) {
+        printf("Employee not found in getEmployeeMonthlyReport\n");
+        free(report);
+        return NULL;
+    };
     
     // 遍历销售记录，按月份统计
     SaleRecordNode* saleCurrent = saleList->head;
@@ -412,7 +425,13 @@ EmployeeMonthlyReport* getEmployeeMonthlyReport(const SaleRecordList* saleList, 
         }
         saleCurrent = saleCurrent->next;
     }
-    
+    // 如果没有任何销售数据，则返回NULL
+    if (*count == 0) {
+        printf("No sales data found for the specified employee\n");
+        free(report);
+        return NULL;
+    }
+
     return report;
 }
 
