@@ -12,7 +12,9 @@
 
 int main() {
     // 设置控制台编码
+    #ifdef _WIN32
     setConsoleEncoding();
+    #endif
     
     // 创建数据结构
     EmployeeList* empList = createEmployeeList();
