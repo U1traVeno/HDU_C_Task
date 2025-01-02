@@ -205,38 +205,42 @@ SaleRecordNode* getAllSaleRecords(const SaleRecordList* list) {
 
 // 文件操作实现
 void saveToFiles(const EmployeeList* empList, const ProductList* prodList, const SaleRecordList* saleList) {
+    if (empList == NULL || prodList == NULL || saleList == NULL) {
+        return;
+    }
+
     // 保存员工信息
     FILE* empFile = fopen("employees.dat", "wb");
-    if (empFile) {
-        EmployeeNode* current = empList->head;
-        while (current != NULL) {
-            fwrite(&current->data, sizeof(Employee), 1, empFile);
-            current = current->next;
-        }
-        fclose(empFile);
+    if (!empFile) {
+        return;
     }
+    
+    for (EmployeeNode* current = empList->head; current != NULL; current = current->next) {
+        fwrite(&current->data, sizeof(Employee), 1, empFile);
+    }
+    fclose(empFile);
     
     // 保存产品信息
     FILE* prodFile = fopen("products.dat", "wb");
-    if (prodFile) {
-        ProductNode* current = prodList->head;
-        while (current != NULL) {
-            fwrite(&current->data, sizeof(Product), 1, prodFile);
-            current = current->next;
-        }
-        fclose(prodFile);
+    if (!prodFile) {
+        return;
     }
+    
+    for (ProductNode* current = prodList->head; current != NULL; current = current->next) {
+        fwrite(&current->data, sizeof(Product), 1, prodFile);
+    }
+    fclose(prodFile);
     
     // 保存销售记录
     FILE* saleFile = fopen("sales.dat", "wb");
-    if (saleFile) {
-        SaleRecordNode* current = saleList->head;
-        while (current != NULL) {
-            fwrite(&current->data, sizeof(SaleRecord), 1, saleFile);
-            current = current->next;
-        }
-        fclose(saleFile);
+    if (!saleFile) {
+        return;
     }
+    
+    for (SaleRecordNode* current = saleList->head; current != NULL; current = current->next) {
+        fwrite(&current->data, sizeof(SaleRecord), 1, saleFile);
+    }
+    fclose(saleFile);
 }
 
 void loadFromFiles(EmployeeList* empList, ProductList* prodList, SaleRecordList* saleList) {
